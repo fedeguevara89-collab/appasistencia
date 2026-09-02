@@ -1,0 +1,834 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <title>Asistencia y Participantes</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <style>
+    :root{
+      --bg:#F7F7F5;
+      --surface:#FFFFFF;
+      --ink:#1A1A1A;
+      --ink-soft:#5C5C5C;
+      --primary:#E30613;
+      --primary-dark:#A3040D;
+      --accent:#FFC72C;
+      --accent-dark:#E0A800;
+      --line:#E6E4E1;
+      --danger:#8B1E1E;
+      --verde:#2F9E44;
+      --amarillo:#E0A100;
+      --rojo:#D64545;
+      --radius:16px;
+      --radius-sm:10px;
+    }
+    *{box-sizing:border-box;}
+    html,body{margin:0;padding:0;}
+    body{
+      background:var(--bg);
+      color:var(--ink);
+      font-family:'Inter',system-ui,-apple-system,sans-serif;
+      -webkit-tap-highlight-color:transparent;
+      padding-bottom:24px;
+    }
+    h1,h2,h3{font-family:'Fredoka',system-ui,sans-serif;margin:0;}
+    .app{max-width:520px;margin:0 auto;padding:16px;}
+
+    .topbar{display:flex;align-items:center;gap:10px;padding:14px 4px 4px;}
+    .topbar .back{
+      width:40px;height:40px;border-radius:50%;background:var(--surface);border:1px solid var(--line);
+      display:flex;align-items:center;justify-content:center;font-size:18px;cursor:pointer;flex-shrink:0;color:var(--ink);
+    }
+    .topbar h1{font-size:20px;color:var(--primary-dark);}
+
+    .context-chip{
+      display:inline-flex;align-items:center;gap:6px;background:var(--surface);border:1px solid var(--line);
+      border-radius:999px;padding:7px 12px 7px 14px;font-size:13px;color:var(--ink-soft);margin:10px 0 16px;
+    }
+    .context-chip b{color:var(--ink);font-weight:600;}
+    .context-chip .change{background:none;border:none;color:var(--primary);font-weight:600;font-size:12.5px;cursor:pointer;padding:2px 4px;font-family:inherit;}
+
+    .home-hero{padding:6px 4px 4px;}
+    .home-hero h1{font-size:26px;color:var(--primary-dark);line-height:1.15;}
+    .home-hero p{color:var(--ink-soft);margin-top:6px;font-size:14.5px;}
+
+    .brand-header{
+      display:flex;align-items:center;gap:10px;padding:4px 2px 18px;
+    }
+    .brand-header .band{
+      width:38px;height:38px;border-radius:10px;background:#fff;border:1.5px solid var(--line);
+      position:relative;overflow:hidden;flex-shrink:0;
+    }
+    .brand-header .band::after{
+      content:'';position:absolute;width:140%;height:11px;background:var(--primary);
+      top:50%;left:-20%;transform:translateY(-50%) rotate(-31deg);
+    }
+    .brand-header .wordmark{font-family:'Fredoka',sans-serif;font-weight:600;font-size:14.5px;color:var(--ink);letter-spacing:.01em;}
+    .brand-header .wordmark small{display:block;font-family:'Inter',sans-serif;font-weight:500;font-size:11px;color:var(--ink-soft);letter-spacing:.04em;text-transform:uppercase;}
+
+    .card-nav{
+      display:flex;align-items:center;gap:14px;background:var(--surface);border:1px solid var(--line);
+      border-radius:var(--radius);padding:18px 16px;margin-bottom:12px;cursor:pointer;
+      transition:transform .08s ease;
+    }
+    .card-nav:active{transform:scale(0.98);}
+    .card-nav .emoji{font-size:26px;width:48px;height:48px;border-radius:12px;display:flex;align-items:center;justify-content:center;flex-shrink:0;}
+    .card-nav.c1 .emoji{background:#FDE7E8;}
+    .card-nav.c2 .emoji{background:#FFF3D6;}
+    .card-nav.c3 .emoji{background:#F1F1F1;}
+    .card-nav .txt h3{font-size:16.5px;color:var(--ink);}
+    .card-nav .txt p{margin:2px 0 0;font-size:13px;color:var(--ink-soft);}
+    .card-nav .chev{margin-left:auto;color:var(--ink-soft);font-size:20px;}
+
+    .section{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:16px;margin-bottom:14px;}
+    .section h3{font-size:15px;color:var(--primary-dark);margin-bottom:12px;}
+    .section .subhead{font-size:12px;color:var(--ink-soft);text-transform:uppercase;letter-spacing:.03em;font-weight:600;margin:0 0 10px;}
+
+    label{display:block;font-size:13px;color:var(--ink-soft);margin:12px 0 6px;font-weight:600;}
+    label:first-child{margin-top:0;}
+    input[type=text],input[type=number],input[type=date],input[type=month],input[type=tel],select,textarea{
+      width:100%;padding:13px 12px;border:1.5px solid var(--line);border-radius:var(--radius-sm);
+      font-size:16px;font-family:inherit;color:var(--ink);background:#FCFBF8;
+    }
+    textarea{resize:vertical;min-height:64px;}
+    input:focus,select:focus,textarea:focus{outline:none;border-color:var(--primary);background:#fff;}
+    select:disabled,input:disabled{opacity:.5;}
+    .hint{font-size:11.5px;color:var(--ink-soft);margin-top:5px;}
+
+    .btn{
+      display:flex;align-items:center;justify-content:center;gap:8px;width:100%;padding:15px;border:none;
+      border-radius:var(--radius-sm);font-family:'Fredoka',system-ui,sans-serif;font-size:16px;font-weight:600;
+      cursor:pointer;color:#fff;background:var(--primary);transition:opacity .1s ease;
+    }
+    .btn:active{opacity:.85;}
+    .btn.accent{background:var(--accent);color:var(--ink);}
+    .btn.outline{background:transparent;border:1.5px solid var(--line);color:var(--ink);}
+    .btn:disabled{background:#C9C4B8;cursor:not-allowed;}
+
+    .toggle-group{display:flex;gap:8px;background:#EFEBE1;padding:4px;border-radius:12px;}
+    .toggle-group button{
+      flex:1;padding:11px 6px;border:none;border-radius:9px;background:transparent;
+      font-family:'Fredoka',sans-serif;font-weight:600;font-size:14.5px;color:var(--ink-soft);cursor:pointer;
+    }
+    .toggle-group button.active{background:var(--surface);color:var(--primary-dark);box-shadow:0 1px 3px rgba(0,0,0,.08);}
+
+    .roster-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;}
+    .roster-header .count{font-size:13px;color:var(--ink-soft);}
+    .roster-header .link-btn{background:none;border:none;color:var(--primary);font-weight:600;font-size:13.5px;cursor:pointer;padding:4px;}
+    .roster-item{
+      display:flex;align-items:center;gap:12px;padding:14px 12px;border-radius:var(--radius-sm);
+      background:#FCFBF8;border:1.5px solid var(--line);margin-bottom:8px;cursor:pointer;user-select:none;
+    }
+    .roster-item.checked{background:#FDEBEC;border-color:var(--primary);}
+    .roster-item .box{
+      width:26px;height:26px;border-radius:8px;border:2px solid var(--line);display:flex;align-items:center;
+      justify-content:center;flex-shrink:0;font-size:15px;color:#fff;
+    }
+    .roster-item.checked .box{background:var(--primary);border-color:var(--primary);}
+    .roster-item .name{font-size:15.5px;font-weight:500;}
+    .empty-msg{text-align:center;color:var(--ink-soft);font-size:14px;padding:24px 12px;}
+
+    .sem-item{
+      background:#FCFBF8;border:1.5px solid var(--line);border-radius:var(--radius-sm);
+      padding:12px;margin-bottom:10px;
+    }
+    .sem-item.evaluado{border-color:#C9C4B8;}
+    .sem-name{font-size:15px;font-weight:500;margin-bottom:10px;}
+    .sem-colors{display:flex;gap:8px;margin-bottom:10px;}
+    .sem-color{
+      flex:1;padding:10px 4px;border-radius:9px;border:2px solid var(--line);background:#fff;
+      font-size:19px;cursor:pointer;text-align:center;line-height:1;
+    }
+    .sem-color.verde.active{background:var(--verde);border-color:var(--verde);}
+    .sem-color.amarillo.active{background:var(--amarillo);border-color:var(--amarillo);}
+    .sem-color.rojo.active{background:var(--rojo);border-color:var(--rojo);}
+    .sem-comment{width:100%;padding:9px 10px;border:1.5px solid var(--line);border-radius:8px;font-size:13.5px;font-family:inherit;background:#fff;}
+
+    .sticky-bottom{
+      position:sticky;bottom:0;background:linear-gradient(180deg,rgba(246,244,239,0) 0%,var(--bg) 30%);
+      padding:14px 0 4px;margin-top:6px;
+    }
+
+    .result-item{
+      display:flex;justify-content:space-between;align-items:center;gap:10px;padding:13px 12px;
+      border-radius:var(--radius-sm);background:#FCFBF8;border:1.5px solid var(--line);margin-bottom:8px;
+    }
+    .result-item .info b{font-size:15px;}
+    .result-item .info div{font-size:12.5px;color:var(--ink-soft);margin-top:2px;}
+    .result-item button{
+      background:#FBEAEA;color:var(--danger);border:none;padding:9px 14px;border-radius:9px;
+      font-weight:600;font-size:13.5px;cursor:pointer;font-family:inherit;flex-shrink:0;
+    }
+
+    .toast{
+      position:fixed;left:16px;right:16px;bottom:20px;max-width:488px;margin:0 auto;
+      background:var(--primary-dark);color:#fff;padding:14px 18px;border-radius:12px;
+      font-size:14.5px;font-weight:500;text-align:center;box-shadow:0 6px 20px rgba(0,0,0,.2);
+      opacity:0;transform:translateY(10px);transition:all .25s ease;pointer-events:none;z-index:50;
+    }
+    .toast.show{opacity:1;transform:translateY(0);}
+    .hidden{display:none !important;}
+
+    .confirm-overlay{position:fixed;inset:0;background:rgba(32,48,58,.5);display:flex;align-items:flex-end;justify-content:center;z-index:60;}
+    .confirm-box{background:#fff;border-radius:18px 18px 0 0;padding:22px;width:100%;max-width:520px;}
+    .confirm-box h3{font-size:17px;margin-bottom:6px;}
+    .confirm-box p{color:var(--ink-soft);font-size:14px;margin:0 0 18px;}
+    .confirm-actions{display:flex;gap:10px;}
+    .confirm-actions .btn{padding:13px;}
+  </style>
+</head>
+<body>
+  <div class="app" id="app">
+
+    <!-- ===== SETUP (Sede + Profesor) ===== -->
+    <div id="screen-setup">
+      <div class="brand-header">
+        <div class="band"></div>
+        <div class="wordmark">Fundación River - Valores a la Cancha</div>
+      </div>
+      <div class="home-hero">
+        <h1>Hola 👋</h1>
+        <p>Antes de arrancar, contanos desde dónde estás cargando.</p>
+      </div>
+      <div class="section">
+        <label>Sede</label>
+        <select id="setup-sede" onchange="onSedeChange()">
+          <option value="">Elegí tu sede...</option>
+        </select>
+
+        <label>Profesor</label>
+        <select id="setup-profesor" disabled onchange="onProfesorChange()">
+          <option value="">Elegí primero la sede</option>
+        </select>
+
+        <div style="margin-top:18px;">
+          <button class="btn" id="btn-continuar-setup" disabled onclick="confirmarSetup()">Continuar</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- ===== HOME ===== -->
+    <div id="screen-home" class="hidden">
+      <div class="brand-header">
+        <div class="band"></div>
+        <div class="wordmark">Fundación River - Valores a la Cancha</div>
+      </div>
+      <div class="home-hero">
+        <h1>Hola 👋</h1>
+        <p>Elegí qué querés registrar hoy.</p>
+      </div>
+
+      <div class="context-chip">
+        <span>📍 <b id="home-contexto"></b></span>
+        <button class="change" onclick="goTo('setup')">Cambiar</button>
+      </div>
+
+      <div class="card-nav c1" onclick="goTo('altabaja')">
+        <div class="emoji">➕</div>
+        <div class="txt"><h3>Altas y bajas</h3><p>Nuevos participantes o dar de baja</p></div>
+        <div class="chev">›</div>
+      </div>
+
+      <div class="card-nav c2" onclick="goTo('entrenamiento')">
+        <div class="emoji">🏃</div>
+        <div class="txt"><h3>Asistencia entrenamiento</h3><p>Pasar lista por nivel</p></div>
+        <div class="chev">›</div>
+      </div>
+
+      <div class="card-nav c3" onclick="goTo('semaforo')">
+        <div class="emoji">🚦</div>
+        <div class="txt"><h3>Semáforo mensual</h3><p>Evaluar a cada participante</p></div>
+        <div class="chev">›</div>
+      </div>
+    </div>
+
+    <!-- ===== ALTAS Y BAJAS ===== -->
+    <div id="screen-altabaja" class="hidden">
+      <div class="topbar">
+        <div class="back" onclick="goTo('home')">←</div>
+        <div><h1>Altas y bajas</h1></div>
+      </div>
+      <div class="context-chip"><span>📍 <b id="altabaja-contexto"></b></span></div>
+
+      <div class="toggle-group" style="margin-bottom:14px;">
+        <button id="tab-alta" class="active" onclick="switchAltaBaja('alta')">Dar de alta</button>
+        <button id="tab-baja" onclick="switchAltaBaja('baja')">Dar de baja</button>
+      </div>
+
+      <!-- ALTA -->
+      <div id="panel-alta">
+        <div class="section">
+          <div class="subhead">Datos del participante</div>
+
+          <label>Apellido</label>
+          <input type="text" id="alta-apellido" placeholder="Apellido">
+
+          <label>Nombre</label>
+          <input type="text" id="alta-nombre" placeholder="Nombre">
+
+          <label>DNI</label>
+          <input type="text" id="alta-dni" inputmode="numeric" placeholder="Sin puntos">
+
+          <label>Fecha de nacimiento</label>
+          <input type="date" id="alta-fecha-nac" onchange="sugerirNivel()">
+
+          <label>Sexo</label>
+          <select id="alta-sexo">
+            <option value="Femenino">Femenino</option>
+            <option value="Masculino">Masculino</option>
+            <option value="Otro">Otro</option>
+          </select>
+
+          <label>Nivel</label>
+          <select id="alta-nivel">
+            <option value="N1">N1 (6-8)</option>
+            <option value="N2">N2 (9-10)</option>
+            <option value="N3">N3 (11-12)</option>
+            <option value="N4">N4 (13-14)</option>
+            <option value="N5">N5 (15-18)</option>
+          </select>
+          <div class="hint">Se sugiere solo al completar la fecha de nacimiento — revisalo igual.</div>
+
+          <label>Observaciones médicas</label>
+          <textarea id="alta-obs-medicas" placeholder="Alergias, medicación, condiciones a tener en cuenta... (opcional)"></textarea>
+
+          <label>Nro de calzado y talle de ropa</label>
+          <input type="text" id="alta-talle" placeholder="Ej: Calzado 38 / Ropa M (opcional)">
+
+          <label>Fecha de alta</label>
+          <input type="date" id="alta-fecha">
+        </div>
+
+        <div class="section">
+          <div class="subhead">Adulto responsable</div>
+
+          <label>Nombre</label>
+          <input type="text" id="ar-nombre" placeholder="Nombre">
+
+          <label>Apellido</label>
+          <input type="text" id="ar-apellido" placeholder="Apellido">
+
+          <label>DNI</label>
+          <input type="text" id="ar-dni" inputmode="numeric" placeholder="Sin puntos">
+
+          <label>Teléfono</label>
+          <input type="tel" id="ar-telefono" placeholder="Con código de área">
+        </div>
+
+        <button class="btn" id="btn-guardar-alta" onclick="guardarAlta()">Guardar alta</button>
+      </div>
+
+      <!-- BAJA -->
+      <div id="panel-baja" class="section hidden">
+        <label>Buscar por nombre, apellido o DNI</label>
+        <input type="text" id="baja-buscar" placeholder="Escribí para buscar..." oninput="buscarBaja()">
+        <div id="baja-resultados" style="margin-top:14px;"></div>
+      </div>
+    </div>
+
+    <!-- ===== ASISTENCIA ENTRENAMIENTO ===== -->
+    <div id="screen-entrenamiento" class="hidden">
+      <div class="topbar">
+        <div class="back" onclick="goTo('home')">←</div>
+        <div><h1>Entrenamiento</h1></div>
+      </div>
+      <div class="context-chip"><span>📍 <b id="ent-contexto"></b></span></div>
+
+      <div class="section">
+        <label>Nivel / grupo</label>
+        <select id="ent-nivel" onchange="cargarAsistenciaEntrenamiento()">
+          <option value="N1">N1</option><option value="N2">N2</option>
+          <option value="N3">N3</option><option value="N4">N4</option><option value="N5">N5</option>
+        </select>
+
+        <label>Fecha</label>
+        <input type="date" id="ent-fecha" onchange="cargarAsistenciaEntrenamiento()">
+
+        <label>Estado</label>
+        <div class="toggle-group">
+          <button id="ent-estado-realizado" class="active" onclick="setEstadoEntrenamiento('Realizado')">Realizado</button>
+          <button id="ent-estado-suspendido" onclick="setEstadoEntrenamiento('Suspendido')">Suspendido</button>
+        </div>
+
+        <div id="ent-tipo-wrap">
+          <label>Tipo de entrenamiento</label>
+          <select id="ent-tipo">
+            <option value="Entrenamiento">Entrenamiento</option>
+            <option value="Torneo">Torneo</option>
+            <option value="Otro">Otro</option>
+          </select>
+        </div>
+
+        <div id="ent-motivo-wrap" class="hidden">
+          <label>Motivo de suspensión</label>
+          <select id="ent-motivo">
+            <option value="Clima">Clima</option>
+            <option value="Profe">Profe</option>
+            <option value="Otros">Otros</option>
+          </select>
+        </div>
+
+        <div id="ent-edit-badge" class="hint hidden" style="margin-top:10px;">✏️ Ya había una carga para este día — la estás editando.</div>
+      </div>
+
+      <div id="ent-roster-section" class="section">
+        <div class="roster-header">
+          <h3 style="margin:0;">Lista</h3>
+          <button class="link-btn" onclick="marcarTodos('ent')">Marcar todos</button>
+        </div>
+        <div class="roster-header" style="margin-top:-6px;">
+          <span class="count" id="ent-count">0 presentes</span>
+        </div>
+        <div id="ent-roster"></div>
+      </div>
+
+      <div class="sticky-bottom">
+        <button class="btn accent" id="btn-guardar-ent" onclick="guardarEntrenamiento()">Guardar asistencia</button>
+      </div>
+    </div>
+
+    <!-- ===== SEMÁFORO MENSUAL ===== -->
+    <div id="screen-semaforo" class="hidden">
+      <div class="topbar">
+        <div class="back" onclick="goTo('home')">←</div>
+        <div><h1>Semáforo mensual</h1></div>
+      </div>
+      <div class="context-chip"><span>📍 <b id="sem-contexto"></b></span></div>
+
+      <div class="section">
+        <label>Nivel / grupo</label>
+        <select id="sem-nivel" onchange="cargarRosterSemaforo()">
+          <option value="N1">N1</option><option value="N2">N2</option>
+          <option value="N3">N3</option><option value="N4">N4</option><option value="N5">N5</option>
+        </select>
+
+        <label>Período</label>
+        <input type="month" id="sem-periodo">
+      </div>
+
+      <div class="section">
+        <div class="roster-header">
+          <h3 style="margin:0;">Participantes</h3>
+        </div>
+        <div class="roster-header" style="margin-top:-6px;">
+          <span class="count" id="sem-count">0 evaluados</span>
+        </div>
+        <div id="sem-roster"></div>
+      </div>
+
+      <div class="sticky-bottom">
+        <button class="btn accent" id="btn-guardar-sem" onclick="guardarSemaforo()">Guardar semáforo</button>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="toast" id="toast"></div>
+
+  <script>
+    /* ---------- helpers de comunicación con la API (Apps Script vía fetch) ---------- */
+
+    // Pegá acá el link /exec de tu implementación de Apps Script
+    const API_URL = 'https://script.google.com/macros/s/AKfycbzGW59Vq9-7_iofBTpEC_TvWwu6K11plpXVj8Pb5TOpjH6R2af6zlnPP29FJMHTmb9K/exec';
+
+    function apiGet(action, params) {
+      var url = new URL(API_URL);
+      url.searchParams.set('action', action);
+      Object.keys(params || {}).forEach(function (k) {
+        if (params[k] !== undefined && params[k] !== null) url.searchParams.set(k, params[k]);
+      });
+      return fetch(url.toString())
+        .then(function (r) { return r.json(); })
+        .then(function (data) {
+          if (data && data.ok === false) throw new Error(data.error || 'Error de la API');
+          return data;
+        });
+    }
+
+    function apiPost(action, payload) {
+      // Content-Type: text/plain evita el preflight de CORS que Apps Script no responde bien.
+      // El body sigue siendo JSON real; del lado del servidor se parsea igual.
+      return fetch(API_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify({ action: action, payload: payload })
+      })
+        .then(function (r) { return r.json(); })
+        .then(function (data) {
+          if (data && data.ok === false) throw new Error(data.error || 'Error de la API');
+          return data;
+        });
+    }
+
+    function todayStr() {
+      var d = new Date();
+      var m = String(d.getMonth() + 1).padStart(2, '0');
+      var day = String(d.getDate()).padStart(2, '0');
+      return d.getFullYear() + '-' + m + '-' + day;
+    }
+    function todayMonthStr() {
+      var d = new Date();
+      var m = String(d.getMonth() + 1).padStart(2, '0');
+      return d.getFullYear() + '-' + m;
+    }
+
+    function showToast(msg) {
+      var t = document.getElementById('toast');
+      t.textContent = msg;
+      t.classList.add('show');
+      setTimeout(function () { t.classList.remove('show'); }, 2600);
+    }
+
+    /* ---------- estado global: sede y profesor elegidos al inicio ---------- */
+    var sedeActual = '';
+    var profesorActual = '';
+    var profesoresDeSede = [];
+
+    /* ---------- navegación ---------- */
+    function goTo(screen) {
+      ['setup', 'home', 'altabaja', 'entrenamiento', 'semaforo'].forEach(function (s) {
+        document.getElementById('screen-' + s).classList.toggle('hidden', s !== screen);
+      });
+      window.scrollTo(0, 0);
+      if (screen === 'entrenamiento') cargarAsistenciaEntrenamiento();
+      if (screen === 'semaforo') cargarRosterSemaforo();
+    }
+
+    /* ---------- SETUP: Sede + Profesor ---------- */
+    function initSetup() {
+      document.getElementById('alta-fecha').value = todayStr();
+      document.getElementById('ent-fecha').value = todayStr();
+      document.getElementById('sem-periodo').value = todayMonthStr();
+
+      apiGet('getSedes').then(function (sedes) {
+        var sel = document.getElementById('setup-sede');
+        sel.innerHTML = '<option value="">Elegí tu sede...</option>' +
+          sedes.map(function (s) { return '<option value="' + s + '">' + s + '</option>'; }).join('');
+      });
+    }
+
+    function onSedeChange() {
+      var sede = document.getElementById('setup-sede').value;
+      var selProf = document.getElementById('setup-profesor');
+      document.getElementById('btn-continuar-setup').disabled = true;
+      if (!sede) {
+        selProf.innerHTML = '<option value="">Elegí primero la sede</option>';
+        selProf.disabled = true;
+        return;
+      }
+      selProf.disabled = true;
+      selProf.innerHTML = '<option value="">Cargando...</option>';
+      apiGet('getProfesoresPorSede', { sede: sede }).then(function (lista) {
+        profesoresDeSede = lista;
+        selProf.innerHTML = '<option value="">Elegí tu nombre...</option>' +
+          lista.map(function (p, i) { return '<option value="' + i + '">' + p.apellido + ' ' + p.nombre + '</option>'; }).join('');
+        selProf.disabled = false;
+      });
+    }
+
+    function onProfesorChange() {
+      var idx = document.getElementById('setup-profesor').value;
+      document.getElementById('btn-continuar-setup').disabled = (idx === '');
+    }
+
+    function confirmarSetup() {
+      sedeActual = document.getElementById('setup-sede').value;
+      var idx = document.getElementById('setup-profesor').value;
+      var prof = profesoresDeSede[idx];
+      profesorActual = prof ? (prof.apellido + ' ' + prof.nombre) : '';
+
+      var contexto = sedeActual + ' · ' + profesorActual;
+      ['home-contexto', 'altabaja-contexto', 'ent-contexto', 'sem-contexto'].forEach(function (id) {
+        document.getElementById(id).textContent = contexto;
+      });
+
+      goTo('home');
+    }
+
+    /* ---------- ALTA / BAJA ---------- */
+    function switchAltaBaja(which) {
+      document.getElementById('tab-alta').classList.toggle('active', which === 'alta');
+      document.getElementById('tab-baja').classList.toggle('active', which === 'baja');
+      document.getElementById('panel-alta').classList.toggle('hidden', which !== 'alta');
+      document.getElementById('panel-baja').classList.toggle('hidden', which !== 'baja');
+    }
+
+    // Sugiere el Nivel según el año de nacimiento (referencia 2026). El profe puede cambiarlo igual.
+    function sugerirNivel() {
+      var val = document.getElementById('alta-fecha-nac').value;
+      if (!val) return;
+      var anio = Number(val.split('-')[0]);
+      var mapa = [
+        { nivel: 'N1', anios: [2018, 2019] },
+        { nivel: 'N2', anios: [2016, 2017] },
+        { nivel: 'N3', anios: [2014, 2015] },
+        { nivel: 'N4', anios: [2012, 2013] },
+        { nivel: 'N5', anios: [2007, 2008, 2009] }
+      ];
+      var match = mapa.find(function (m) { return m.anios.indexOf(anio) !== -1; });
+      if (match) document.getElementById('alta-nivel').value = match.nivel;
+    }
+
+    function guardarAlta() {
+      var datos = {
+        sede: sedeActual,
+        fechaAlta: document.getElementById('alta-fecha').value,
+        dni: document.getElementById('alta-dni').value.trim(),
+        nombre: document.getElementById('alta-nombre').value.trim(),
+        apellido: document.getElementById('alta-apellido').value.trim(),
+        fechaNacimiento: document.getElementById('alta-fecha-nac').value,
+        sexo: document.getElementById('alta-sexo').value,
+        nivel: document.getElementById('alta-nivel').value,
+        observacionesMedicas: document.getElementById('alta-obs-medicas').value.trim(),
+        talleCalzado: document.getElementById('alta-talle').value.trim(),
+        arNombre: document.getElementById('ar-nombre').value.trim(),
+        arApellido: document.getElementById('ar-apellido').value.trim(),
+        arDni: document.getElementById('ar-dni').value.trim(),
+        arTelefono: document.getElementById('ar-telefono').value.trim()
+      };
+      if (!datos.nombre || !datos.apellido || !datos.dni) {
+        showToast('Completá al menos DNI, nombre y apellido del participante');
+        return;
+      }
+      var btn = document.getElementById('btn-guardar-alta');
+      btn.disabled = true; btn.textContent = 'Guardando...';
+      apiPost('altaParticipante', datos).then(function () {
+        showToast('✅ Participante dado de alta');
+        [
+          'alta-dni', 'alta-nombre', 'alta-apellido', 'alta-fecha-nac', 'alta-obs-medicas', 'alta-talle',
+          'ar-nombre', 'ar-apellido', 'ar-dni', 'ar-telefono'
+        ].forEach(function (id) { document.getElementById(id).value = ''; });
+        btn.disabled = false; btn.textContent = 'Guardar alta';
+      }).catch(function (e) {
+        showToast('Error: ' + e.message);
+        btn.disabled = false; btn.textContent = 'Guardar alta';
+      });
+    }
+
+    var bajaTimer = null;
+    function buscarBaja() {
+      clearTimeout(bajaTimer);
+      var q = document.getElementById('baja-buscar').value;
+      bajaTimer = setTimeout(function () {
+        apiGet('buscarParticipantes', { query: q, sede: sedeActual }).then(renderResultadosBaja);
+      }, 250);
+    }
+
+    function renderResultadosBaja(lista) {
+      var el = document.getElementById('baja-resultados');
+      if (!lista.length) {
+        el.innerHTML = '<div class="empty-msg">Sin resultados</div>';
+        return;
+      }
+      el.innerHTML = lista.map(function (p) {
+        return '<div class="result-item">' +
+          '<div class="info"><b>' + p.nombre + ' ' + p.apellido + '</b>' +
+          '<div>Nivel ' + p.nivel + ' · DNI ' + p.dni + '</div></div>' +
+          '<button onclick="confirmarBaja(' + p.id + ',\'' + (p.nombre + ' ' + p.apellido).replace(/'/g, '') + '\')">Dar de baja</button>' +
+          '</div>';
+      }).join('');
+    }
+
+    function confirmarBaja(id, nombre) {
+      var overlay = document.createElement('div');
+      overlay.className = 'confirm-overlay';
+      overlay.innerHTML = '<div class="confirm-box">' +
+        '<h3>¿Dar de baja a ' + nombre + '?</h3>' +
+        '<p>Esta acción se puede revertir editando la planilla manualmente.</p>' +
+        '<div class="confirm-actions">' +
+        '<button class="btn outline" id="cancelar-baja">Cancelar</button>' +
+        '<button class="btn" style="background:var(--danger)" id="aceptar-baja">Sí, dar de baja</button>' +
+        '</div></div>';
+      document.body.appendChild(overlay);
+      document.getElementById('cancelar-baja').onclick = function () { overlay.remove(); };
+      document.getElementById('aceptar-baja').onclick = function () {
+        apiPost('bajaParticipante', { id: id, fechaBaja: todayStr() }).then(function () {
+          overlay.remove();
+          showToast('Participante dado de baja');
+          buscarBaja();
+        });
+      };
+    }
+
+    /* ---------- ASISTENCIA ENTRENAMIENTO ---------- */
+    var rosterEnt = [];
+    var estadoEntrenamiento = 'Realizado';
+
+    function setEstadoEntrenamiento(estado) {
+      estadoEntrenamiento = estado;
+      document.getElementById('ent-estado-realizado').classList.toggle('active', estado === 'Realizado');
+      document.getElementById('ent-estado-suspendido').classList.toggle('active', estado === 'Suspendido');
+      document.getElementById('ent-tipo-wrap').classList.toggle('hidden', estado !== 'Realizado');
+      document.getElementById('ent-motivo-wrap').classList.toggle('hidden', estado !== 'Suspendido');
+      document.getElementById('ent-roster-section').classList.toggle('hidden', estado !== 'Realizado');
+    }
+
+    function cargarAsistenciaEntrenamiento() {
+      if (!sedeActual) return;
+      var nivel = document.getElementById('ent-nivel').value;
+      var fecha = document.getElementById('ent-fecha').value;
+      if (!fecha) return;
+
+      document.getElementById('ent-roster').innerHTML = '<div class="empty-msg">Cargando...</div>';
+      document.getElementById('ent-edit-badge').classList.add('hidden');
+
+      Promise.all([
+        apiGet('getParticipantesPorSedeNivel', { sede: sedeActual, nivel: nivel }),
+        apiGet('buscarAsistenciaEntrenamiento', { sede: sedeActual, nivel: nivel, fecha: fecha })
+      ]).then(function (res) {
+        var listaActiva = res[0];
+        var existente = res[1];
+
+        if (existente) {
+          document.getElementById('ent-edit-badge').classList.remove('hidden');
+          setEstadoEntrenamiento(existente.estado);
+          if (existente.estado === 'Realizado') {
+            document.getElementById('ent-tipo').value = existente.tipo || 'Entrenamiento';
+          } else {
+            document.getElementById('ent-motivo').value = existente.motivoSuspension || 'Clima';
+          }
+          var presentesPorId = {};
+          existente.participantes.forEach(function (p) { presentesPorId[p.id] = p.presente; });
+          rosterEnt = listaActiva.map(function (p) {
+            return Object.assign({ presente: !!presentesPorId[p.id] }, p);
+          });
+        } else {
+          setEstadoEntrenamiento('Realizado');
+          document.getElementById('ent-tipo').value = 'Entrenamiento';
+          rosterEnt = listaActiva.map(function (p) { return Object.assign({ presente: false }, p); });
+        }
+        renderRosterEnt();
+      });
+    }
+
+    function renderRosterEnt() {
+      var el = document.getElementById('ent-roster');
+      if (!rosterEnt.length) {
+        el.innerHTML = '<div class="empty-msg">No hay participantes activos para esta selección.</div>';
+      } else {
+        el.innerHTML = rosterEnt.map(function (p, i) {
+          return '<div class="roster-item ' + (p.presente ? 'checked' : '') + '" onclick="toggleRosterEnt(' + i + ')">' +
+            '<div class="box">' + (p.presente ? '✓' : '') + '</div>' +
+            '<div class="name">' + p.nombre + ' ' + p.apellido + '</div>' +
+            '</div>';
+        }).join('');
+      }
+      var n = rosterEnt.filter(function (p) { return p.presente; }).length;
+      document.getElementById('ent-count').textContent = n + ' presente' + (n === 1 ? '' : 's') + ' de ' + rosterEnt.length;
+    }
+
+    function toggleRosterEnt(i) {
+      rosterEnt[i].presente = !rosterEnt[i].presente;
+      renderRosterEnt();
+    }
+
+    function marcarTodos(prefix) {
+      if (prefix !== 'ent') return;
+      var algunoSinMarcar = rosterEnt.some(function (p) { return !p.presente; });
+      rosterEnt.forEach(function (p) { p.presente = algunoSinMarcar; });
+      renderRosterEnt();
+    }
+
+    function guardarEntrenamiento() {
+      var fecha = document.getElementById('ent-fecha').value;
+      if (!fecha) { showToast('Elegí una fecha'); return; }
+      if (estadoEntrenamiento === 'Realizado' && !rosterEnt.length) {
+        showToast('No hay lista cargada'); return;
+      }
+      var btn = document.getElementById('btn-guardar-ent');
+      btn.disabled = true; btn.textContent = 'Guardando...';
+      var payload = {
+        fecha: fecha,
+        sede: sedeActual,
+        nivel: document.getElementById('ent-nivel').value,
+        profesor: profesorActual,
+        estado: estadoEntrenamiento,
+        tipo: document.getElementById('ent-tipo').value,
+        motivo: document.getElementById('ent-motivo').value,
+        participantes: rosterEnt
+      };
+      apiPost('guardarAsistenciaEntrenamiento', payload).then(function (res) {
+        showToast('✅ Guardado (' + res.cantidad + ' registro' + (res.cantidad === 1 ? '' : 's') + ')');
+        document.getElementById('ent-edit-badge').classList.remove('hidden');
+        btn.disabled = false; btn.textContent = 'Guardar asistencia';
+      }).catch(function (e) {
+        showToast('Error: ' + e.message);
+        btn.disabled = false; btn.textContent = 'Guardar asistencia';
+      });
+    }
+
+    /* ---------- SEMÁFORO MENSUAL ---------- */
+    var rosterSem = [];
+    function cargarRosterSemaforo() {
+      if (!sedeActual) return;
+      var nivel = document.getElementById('sem-nivel').value;
+      document.getElementById('sem-roster').innerHTML = '<div class="empty-msg">Cargando...</div>';
+      apiGet('getParticipantesPorSedeNivel', { sede: sedeActual, nivel: nivel }).then(function (lista) {
+        rosterSem = lista.map(function (p) { return Object.assign({ categoria: '', comentario: '' }, p); });
+        renderRosterSemaforo();
+      });
+    }
+
+    function renderRosterSemaforo() {
+      var el = document.getElementById('sem-roster');
+      if (!rosterSem.length) {
+        el.innerHTML = '<div class="empty-msg">No hay participantes activos para esta selección.</div>';
+        actualizarContadorSemaforo();
+        return;
+      }
+      el.innerHTML = rosterSem.map(function (p, i) {
+        return '<div class="sem-item ' + (p.categoria ? 'evaluado' : '') + '">' +
+          '<div class="sem-name">' + p.nombre + ' ' + p.apellido + '</div>' +
+          '<div class="sem-colors">' +
+            '<div class="sem-color verde ' + (p.categoria === 'Verde' ? 'active' : '') + '" onclick="setCategoriaSemaforo(' + i + ',\'Verde\')">🟢</div>' +
+            '<div class="sem-color amarillo ' + (p.categoria === 'Amarillo' ? 'active' : '') + '" onclick="setCategoriaSemaforo(' + i + ',\'Amarillo\')">🟡</div>' +
+            '<div class="sem-color rojo ' + (p.categoria === 'Rojo' ? 'active' : '') + '" onclick="setCategoriaSemaforo(' + i + ',\'Rojo\')">🔴</div>' +
+          '</div>' +
+          '<input type="text" class="sem-comment" placeholder="Comentario (opcional)" value="' + (p.comentario || '').replace(/"/g, '') + '" oninput="setComentarioSemaforo(' + i + ', this.value)">' +
+          '</div>';
+      }).join('');
+      actualizarContadorSemaforo();
+    }
+
+    function setCategoriaSemaforo(i, cat) {
+      rosterSem[i].categoria = (rosterSem[i].categoria === cat) ? '' : cat;
+      renderRosterSemaforo();
+    }
+
+    function setComentarioSemaforo(i, val) {
+      rosterSem[i].comentario = val;
+    }
+
+    function actualizarContadorSemaforo() {
+      var n = rosterSem.filter(function (p) { return p.categoria; }).length;
+      document.getElementById('sem-count').textContent = n + ' evaluado' + (n === 1 ? '' : 's') + ' de ' + rosterSem.length;
+    }
+
+    function guardarSemaforo() {
+      if (!rosterSem.length) { showToast('No hay lista cargada'); return; }
+      var evaluados = rosterSem.filter(function (p) { return p.categoria; });
+      if (!evaluados.length) { showToast('Elegí al menos una categoría antes de guardar'); return; }
+      var btn = document.getElementById('btn-guardar-sem');
+      btn.disabled = true; btn.textContent = 'Guardando...';
+      var payload = {
+        periodo: document.getElementById('sem-periodo').value,
+        sede: sedeActual,
+        nivel: document.getElementById('sem-nivel').value,
+        profesor: profesorActual,
+        participantes: rosterSem
+      };
+      apiPost('guardarSemaforo', payload).then(function (res) {
+        showToast('✅ Semáforo guardado (' + res.cantidad + ' registros)');
+        btn.disabled = false; btn.textContent = 'Guardar semáforo';
+      }).catch(function (e) {
+        showToast('Error: ' + e.message);
+        btn.disabled = false; btn.textContent = 'Guardar semáforo';
+      });
+    }
+
+    initSetup();
+  </script>
+</body>
+</html>
